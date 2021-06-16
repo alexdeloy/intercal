@@ -9,7 +9,8 @@ border = 25 # Border in mm
 cellWidth = (pageSize[0] - 2*border) / 7
 dayCellHeight = 40
 language = "en"
-
+alignment = "L"
+alignmentShift = 1.35
 
 # --- Translations
 monthNames = {
@@ -31,6 +32,7 @@ pdf = FPDF(
 )
 
 pdf.set_margins(0, 0, 0)
+pdf.set_draw_color(222,222,222)
 
 # --- Register fonts
 pdf.add_font("Inter", "", "fonts/Inter-Regular.ttf", uni=True)
@@ -65,7 +67,7 @@ for month in range(1, 13):
     pdf.add_page()
 
     # --- Write Month
-    pdf.set_xy(border, 2*border)
+    pdf.set_xy(alignmentShift*border, 2.5*border)
     pdf.set_text_color(0, 0, 0)
     pdf.set_font("Inter", "B", 120)
     pdf.cell(pageSize[0] - 2*border, 50, monthNames[language][month-1], border=debugBorder)
@@ -73,11 +75,11 @@ for month in range(1, 13):
     # --- Write Header
     y = pdf.get_y()
     pdf.set_y(y+3*border)
-    pdf.set_x(border)
+    pdf.set_x(alignmentShift*border)
     pdf.set_text_color(200, 200, 200)
-    pdf.set_font("Inter", "", 16)
+    pdf.set_font("Inter", "", 13)
     for i in range(7):
-        pdf.cell(cellWidth, dayCellHeight/2, dayNames[language][i], align="L", border=debugBorder)
+        pdf.cell(cellWidth, dayCellHeight/2, dayNames[language][i], align=alignment, border=debugBorder)
 
     # --- Write Days
     pdf.set_text_color(0, 0, 0)
@@ -85,37 +87,37 @@ for month in range(1, 13):
 
     y = pdf.get_y()
     pdf.set_y(y+dayCellHeight/2)
-    pdf.set_x(border)
+    pdf.set_x(alignmentShift*border)
 
     dayCounter = 0
 
-    pdf.set_text_color(200, 200, 200)
+    pdf.set_text_color(222, 222, 222)
     for day in daysPre:
-        pdf.cell(cellWidth, dayCellHeight, str(day), align="L", border=debugBorder)
+        pdf.cell(cellWidth, dayCellHeight, str(day), align=alignment, border=debugBorder)
         dayCounter += 1
         if dayCounter % 7 == 0:
             y = pdf.get_y()
             pdf.set_y(y+dayCellHeight)
-            pdf.set_x(border)
+            pdf.set_x(alignmentShift*border)
 
     pdf.set_text_color(0, 0, 0)
     for day in daysNow:
-        pdf.cell(cellWidth, dayCellHeight, str(day), align="L", border=debugBorder)
+        pdf.cell(cellWidth, dayCellHeight, str(day), align=alignment, border=debugBorder)
         dayCounter += 1
         if dayCounter % 7 == 0:
             y = pdf.get_y()
             pdf.set_y(y+dayCellHeight)
-            pdf.set_x(border)
+            pdf.set_x(alignmentShift*border)
 
-    pdf.set_text_color(200, 200, 200)
+    pdf.set_text_color(222, 222, 222)
     for day in daysPost:
-        pdf.cell(cellWidth, dayCellHeight, str(day), align="L", border=debugBorder)
+        pdf.cell(cellWidth, dayCellHeight, str(day), align=alignment, border=debugBorder)
         dayCounter += 1
         if dayCounter % 7 == 0:
             y = pdf.get_y()
             pdf.set_y(y+dayCellHeight)
-            pdf.set_x(border)
+            pdf.set_x(alignmentShift*border)
 
 
 # --- Output
-pdf.output("calendar.pdf", "F")
+pdf.output(f"intercal-{now.year}.pdf", "F")
